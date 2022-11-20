@@ -75,7 +75,7 @@ class ClassOffering:
     self.code = code
     self.name = name
 
-  def getPrerequisites():
+  def getPrerequisites(self):
     return self.prerequisites
 
   def getCode(self):
@@ -212,11 +212,11 @@ class Advisor(Human):
   def addAdvisee(self, student: Student):
     self.advisees.append(student)
 
-  def enrollStudent(student: Student, course: Course):
+  def enrollStudent(self, student: Student, course: Course):
     # Check prerequisites
     for prereq in course.getPrerequisites():
       if not prereq in student.completedCourses:
-        raise LookupError("Student " + student + "cannot take course " + course + ": Unsatisfied prerequisite " + str(prereq))
+        raise LookupError("Student " + str(student) + "cannot take course " + str(course) + ": Unsatisfied prerequisite " + str(prereq))
     course.enrolledStudents.append(student)
     student.enrolledCourses.append(course)
 
@@ -262,10 +262,13 @@ def main():
   advisor = Advisor("Bunde")
   stu = Student("John", advisor)
   course = Course("CS208", "Programming Languages", Professor("Bose"))
-  
+  course.addPrerequisite(ClassOffering("CS142", "Intro to Algorithms", "Spacco"))
+  advisor.enrollStudent(stu, course)
+
   term = Term()
   term.addCourse(course)
   term.run()
+  term.conclude()
 
 
 if __name__ == "__main__":
